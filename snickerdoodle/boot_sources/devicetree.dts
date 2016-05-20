@@ -34,7 +34,7 @@
 
 	memory {
 		device_type = "memory";
-		reg = <0x0 0x20000000>;
+		reg = <0x0 0x40000000>;
 	};
 
 	wlan_en_reg: fixedregulator@1 {
@@ -114,6 +114,10 @@
 &qspi {
         u-boot,dm-pre-reloc;
         status = "okay";
+};
+
+&devcfg {
+	syscon = <&slcr>;
 };
 
 &amba {

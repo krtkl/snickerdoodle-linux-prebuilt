@@ -1,0 +1,5 @@
+bootargs=console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait earlyprintk
+boot_snickerdoodle=mmcinfo;fatload mmc 0:1 0x3000000 ${kernel_image}; fatload mmc 0:1 0x2FF0000 ${devicetree_image}; bootm 0x3000000 - 0x2FF0000
+uenvcmd=run boot_snickerdoodle
+uenv_boot=run boot_snickerdoodle
+
