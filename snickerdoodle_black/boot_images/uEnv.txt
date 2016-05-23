@@ -1,8 +1,5 @@
 bootargs=console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait earlyprintk
-loadbit_addr=0x4000000
-bitsize=0x1FCC15
-load_bitstream=fpga info 0; echo Loading bitstream from SD/MMC/eMMC to RAM...; fatload mmc 0:1 ${loadbit_addr} ${bitstream_image}; fpga loadb 0 ${loadbit_addr} ${bitsize}
 boot_snickerdoodle=mmcinfo; echo Copying Linux from SD to RAM...; fatload mmc 0:1 0x3000000 ${kernel_image}; fatload mmc 0:1 0x2FF0000 ${devicetree_image}; bootm 0x3000000 - 0x2FF0000
-uenvcmd=run load_bitstream; then run boot_snickerdoodle
-uenv_boot=run load_bitstream; then boot_snickerdoodle
+uenvcmd=run boot_snickerdoodle
+uenv_boot=run boot_snickerdoodle
 
