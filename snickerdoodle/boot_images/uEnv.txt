@@ -1,5 +1,11 @@
 bootargs=console=ttyPS0,115200 root=/dev/mmcblk0p2 rw rootwait earlyprintk
-boot_snickerdoodle=mmcinfo;fatload mmc 0:1 0x3000000 ${kernel_image}; fatload mmc 0:1 0x2FF0000 ${devicetree_image}; bootm 0x3000000 - 0x2FF0000
-uenvcmd=run boot_snickerdoodle
-uenv_boot=run boot_snickerdoodle
+bootdelay=3
+bitstream_image=system.bit
+configenv=config.txt
+loadconfigenv=load mmc 0 ${loadbootenv_addr} ${configenv}
+importconfigenv=echo Importing configuration environment...; env import -t ${loadbootenv_addr} ${filesize}; echo Config set to ${config_dir}
+mmc_loadbit=if test -e mmc 0 ${bitstream_image}; then echo Loading bitstream ${bitstream_image} from microSD to RAM... && fatload mmc 0 ${loadbit_addr} ${bitstream_image} && fpga loadb 0 ${loadbit_addr} ${filesize}; fi;
+boot_snickerdoodle=mmcinfo; echo Copying Linux system from microSD to RAM...; fatload mmc 0:1 0x3000000 ${kernel_image}; fatload mmc 0:1 0x2FF0000 ${devicetree_image}; bootm 0x3000000 - 0x2FF0000
+update_config=if test -e mmc 0 ${configenv}; then if env run loadconfigenv; then run importconfigenv && setenv bitstream_image ${config_dir}${bitstream_image} && setenv devicetree_image ${config_dir}${devicetree_image}; fi; fi;
+uenvcmd=run update_config; run mmc_loadbit; run boot_snickerdoodle
 
